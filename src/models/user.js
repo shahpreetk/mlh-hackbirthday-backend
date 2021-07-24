@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Detail = require("./detail");
+// const Detail = require("./detail");
 
 const userSchema = new mongoose.Schema(
   {
@@ -34,6 +34,26 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
+    dob: {
+      type: Date,
+    },
+    twitter: {
+      type: String,
+    },
+    emailM: {
+      type: String,
+      unique: true,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is invalid!");
+        }
+      },
+    },
+    bio: {
+      type: String,
+    },
     tokens: [
       {
         token: {
@@ -51,11 +71,11 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.virtual("details", {
-  ref: "Detail",
-  localField: "_id",
-  foreignField: "owner",
-});
+// userSchema.virtual("details", {
+//   ref: "Detail",
+//   localField: "_id",
+//   foreignField: "owner",
+// });
 
 userSchema.methods.toJSON = function () {
   const user = this;
